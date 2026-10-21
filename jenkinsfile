@@ -1,0 +1,81 @@
+pipeline {
+    agent any
+    tools{
+        maven'maven3'
+    }
+
+    stages {
+        stage('checkout'){
+            steps(){
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: '8277fbe5-ea4f-469e-8c63-ec9bc0237502', url: 'https://github.com/sheriffagu/Pipeline_Automation2']])
+            }
+        }
+        stage('build') {
+            steps {
+                sh'mvn clean install -f MyWebApp/pom.xml'
+            }
+        }
+        stage('code coverage'){
+            steps(){
+              jacoco()
+            }
+        }
+        stage('code scanning'){
+            steps(){
+                withSonarQubeEnv(installationName: 'sonarQube', credentialsId: 'a8536b7d-fefb-462d-8c47-ceace043bcb5') {
+                     sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -f MyWebApp/pom.xml'
+              }
+          }
+      }
+      stage('security scanning'){
+          steps(){
+              sh "trivy fs ."
+          }
+      }
+      stage('binary storage'){
+      steps(){
+          nexusArtifactUploader artifacts: [[artifactId: 'MyWebApp', classifier: '', file: 'MyWebApp/target/MyWebApp.war', type: 'war']], credentialsId: 'cf9a083f-ac13-4884-9438-28b1c1e79d81', groupId: 'com.dept.app', nexusUrl: 'ec2-18-222-255-211.us-east-2.compute.amazonaws.com:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: '1.0-SNAPSHOT'
+        }
+      }   
+      stage('dev env'){
+          steps(){
+              deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'tomcat-deploy', path: '', url: 'http://ec2-52-14-143-199.us-east-2.compute.amazonaws.com:8080/')], contextPath: 'MyWebApp', war: '**/*.war'
+          }
+      }
+      stage('dev notify'){
+          steps(){
+              echo' notify manager'
+              slackSend channel: 'sep-2026--class', message: 'CI process is complete read to deploy to dev env '
+          }
+      }
+//end of Ci pipeline              
+//begining of cd pipeline
+          stage('QA approval'){
+              steps(){
+                  echo "approval needed from manager"
+                  timeout(time: 10, unit: 'MINUTES') {
+    input message: 'Approval needed from manager', ok: 'Approve'
+              }
+           }
+       }
+            stage('QA env'){
+             steps(){
+              deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'tomcat-deploy', path: '', url: 'http://ec2-52-14-143-199.us-east-2.compute.amazonaws.com:8080/')], contextPath: 'MyWebApp', war: '**/*.war'
+        }
+     }  
+      stage('QA notify'){
+          steps(){
+              echo' notify manager'
+              slackSend channel: 'sep-2026--class,deployment-team', message: 'CI process is complete read to deploy to dev env '
+    }
+ }
+     stage('Prod approval'){
+              steps(){
+                  echo "approval needed from manager"
+                  timeout(time: 10, unit: 'MINUTES') {
+    input message: 'Approval needed from manager', ok: 'Approve'
+            }
+        }
+     }
+   }
+}
