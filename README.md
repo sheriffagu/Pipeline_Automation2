@@ -47,8 +47,8 @@ Technologies Used
 The Jenkins Stage View demonstrates the execution of automated build, code analysis, security scanning, artifact storage, notification, and approval stages.
 
  Pipeline Screenshot
+<img width="1502" height="237" alt="image" src="https://github.com/user-attachments/assets/017add3d-5053-42b4-88b7-98c4faa5b9a1" />
 
-![Jenkins Pipeline Build 44](screenshots/jenkins-build-44.png)
 
  Key Skills Demonstrated
 
