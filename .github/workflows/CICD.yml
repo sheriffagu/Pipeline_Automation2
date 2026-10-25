@@ -20,7 +20,7 @@ jobs:
       run: mvn clean install -f MyWebApp/pom.xml
     - name: SonarQube Scan with Quality Gate
       run: |
-        mvn -f MyWebApp/pom.xml sonar:sonar \
+        mvn -f MyWebApp/pom.xml \
           -Dsonar.projectKey=MyWebApp \
           -Dsonar.projectName=MyWebApp \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
