@@ -1,29 +1,40 @@
 name: CICd Workflow for Maven build and Sonar Code scan
+
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-        cache: 'maven'
-    - name: Build with Maven
-      run: mvn clean install -f MyWebApp/pom.xml
-    - name: SonarQube Scan with Quality Gate
-      run: |
-        mvn -f MyWebApp/pom.xml \
-        org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.projectKey=MyWebApp \
-          -Dsonar.projectName=MyWebApp \
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          cache-dependency-path: MyWebApp/pom.xml
+
+      - name: Build with Maven
+        run: mvn clean install -f MyWebApp/pom.xml
+
+      - name: SonarQube Scan with Quality Gate
         env:
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: 
+          mvn -f MyWebApp/pom.xml
+          org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dsonar.projectKey=MyWebApp
+          -Dsonar.projectName=MyWebApp
+          -Dsonar.host.url="$SONAR_HOST_URL"
+          -Dsonar.qualitygate.wait=true
