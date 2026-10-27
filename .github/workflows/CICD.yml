@@ -1,4 +1,5 @@
 name: CICd Workflow for Maven build and Sonar Code scan
+
 on:
   push:
     branches:
@@ -41,11 +42,12 @@ jobs:
             -Dsonar.projectKey=MyWebApp \
             -Dsonar.host.url="$SONAR_HOST_URL" \
             -Dsonar.qualitygate.wait=true
-            - name: Check Nexus secrets
+
+      - name: Check Nexus secrets
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-       run: |
+        run: |
           if [ -n "$NEXUS_USERNAME" ]; then
             echo "Nexus username is present"
           else
