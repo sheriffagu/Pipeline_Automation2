@@ -34,9 +34,9 @@ jobs:
         run: mvn -f MyWebApp/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=MyWebApp -Dsonar.host.url="$SONAR_HOST_URL" -Dsonar.qualitygate.wait=true
       - name: Upload artifact to Nexus
         run: |
-          nexus-repo-url: ${{ secrets.NEXUS_URL }} \
-          nexus-username: ${{ secrets.NEXUS_USERNAME }} \
-          nexus-password: ${{ secrets.NEXUS_PASSWORD }} \
+          nexus_url: ${{ secrets.NEXUS_URL }} \
+          nexus_username: ${{ secrets.NEXUS_USERNAME }} \
+          nexus_password: ${{ secrets.NEXUS_PASSWORD }} \
           nexus-repository: "maven-snapshots"
           artifact-path: "MyWebApp/target/myWebApp.war"
           artifact-format: "maven"
