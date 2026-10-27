@@ -32,7 +32,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_PASSWORD }}
         run: 
           mvn -f MyWebApp/pom.xml
-          org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          org.sonarsource.scanner.maven:sonar-maven-plugin:sonar.mvn -f MyWebApp/pom.xml
           -Dsonar.projectKey=MyWebApp
           -Dsonar.projectName=MyWebApp
           -Dsonar.host.url="$SONAR_HOST_URL"
