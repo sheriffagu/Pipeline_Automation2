@@ -38,4 +38,4 @@ jobs:
           -Dsonar.host.url="$SONAR_HOST_URL"
           -Dsonar.qualitygate.wait=true
           -name:javoco coverage
-        run: mvn clean verify -f MyWebApp/pom.xml 
+           run:mvn clean verify -f MyWebApp/pom.xml 
