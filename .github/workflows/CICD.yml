@@ -30,12 +30,12 @@ jobs:
         env:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_PASSWORD }}
-        run: 
+        run: | 
           mvn -f MyWebApp/pom.xml
           org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
           -Dsonar.projectKey=MyWebApp
           -Dsonar.projectName=MyWebApp
           -Dsonar.host.url="$SONAR_HOST_URL"
           -Dsonar.qualitygate.wait=true
-          -name:javoco coverage
-          run:mvn clean verify -f MyWebApp/pom.xml
+          -name: run javoco coverage
+        run: mvn clean verify -f MyWebApp/pom.xml \
