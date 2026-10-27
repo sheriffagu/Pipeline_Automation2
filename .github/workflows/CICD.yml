@@ -45,11 +45,9 @@ jobs:
       - name: Upload artifact to Nexus
         env:
           NEXUS_URL: ${{ secrets.NEXUS_URL }}
-          server-username: ${{ secrets.NEXUS_USERNAME }}
-          server-password: ${{ secrets.NEXUS_PASSWORD }}
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
-          mvn deploy:deploy-file \
-            -DrepositoryId=nexus \
-            -Durl="$NEXUS_URL" \
-            -Dfile=MyWebApp/target/MyWebApp.war \
-            -DpomFile=MyWebApp/pom.xml
+          curl --fail --user "$NEXUS_USERNAME:$NEXUS_PASSWORD" \
+            --upload-file MyWebApp/target/MyWebApp.war \
+            "$NEXUS_URL/com/dept/app/MyWebApp/1.0-SNAPSHOT/MyWebApp-1.0-SNAPSHOT.war"
