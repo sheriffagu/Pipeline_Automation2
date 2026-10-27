@@ -31,18 +31,15 @@ jobs:
         env:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_PASSWORD }}
-        run: mvn -f MyWebApp/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=MyWebApp -Dsonar.host.url="$SONAR_HOST_URL" -Dsonar.qualitygate.wait=true
-      -  name: Upload artifact to Nexus
-        env: 
-          nexus_url: ${{ secrets.NEXUS_URL }} 
-          nexus_username: ${{ secrets.NEXUS_USERNAME }} 
-          nexus_password: ${{ secrets.NEXUS_PASSWORD }} 
-          run: |
-          mvn deploy: deploy-file
-          nexus-repository: "maven-snapshots"
-          artifact-path: "MyWebApp/target/myWebApp.war"
-          artifact-format: "war"
-          artifact-group-id: "com.dept.app"
-          artifact-id: "MyWebApp"
-          artifact-version: "1.0-SNAPSHOT"
-
+         run: mvn -f MyWebApp/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=MyWebApp -Dsonar.host.url="$SONAR_HOST_URL" -Dsonar.qualitygate.wait=true
+            - name: Upload artifact to Nexus
+        env:
+          NEXUS_URL: ${{ secrets.NEXUS_URL }}
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        run: |
+          mvn deploy:deploy-file \
+            -DrepositoryId=nexus \
+            -Durl="$NEXUS_URL" \
+            -Dfile=MyWebApp/target/MyWebApp.war \
+            -DpomFile=MyWebApp/pom.xml
