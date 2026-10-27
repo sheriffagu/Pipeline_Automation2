@@ -45,8 +45,8 @@ jobs:
       - name: Upload artifact to Nexus
         env:
           NEXUS_URL: ${{ secrets.NEXUS_URL }}
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          server-username: ${{ secrets.NEXUS_USERNAME }}
+          server-password: ${{ secrets.NEXUS_PASSWORD }}
         run: |
           mvn deploy:deploy-file \
             -DrepositoryId=nexus \
