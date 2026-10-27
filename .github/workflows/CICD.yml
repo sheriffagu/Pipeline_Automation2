@@ -25,7 +25,8 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install -f MyWebApp/pom.xml
-
+      - name: javoco coverage
+        run: mvn clean verify -f MyWebApp/pom.xml 
       - name: SonarQube Scan with Quality Gate
         env:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -37,5 +38,4 @@ jobs:
           -Dsonar.projectName=MyWebApp
           -Dsonar.host.url="$SONAR_HOST_URL"
           -Dsonar.qualitygate.wait=true
-          -name:javoco coverage
-           run:mvn clean verify -f MyWebApp/pom.xml 
+          
