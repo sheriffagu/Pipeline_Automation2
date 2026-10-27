@@ -37,9 +37,11 @@ jobs:
           nexus_url: ${{ secrets.NEXUS_URL }} 
           nexus_username: ${{ secrets.NEXUS_USERNAME }} 
           nexus_password: ${{ secrets.NEXUS_PASSWORD }} 
+          run: |
+          mvn deploy: deploy-file
           nexus-repository: "maven-snapshots"
           artifact-path: "MyWebApp/target/myWebApp.war"
-          artifact-format: "maven"
+          artifact-format: "war"
           artifact-group-id: "com.dept.app"
           artifact-id: "MyWebApp"
           artifact-version: "1.0-SNAPSHOT"
