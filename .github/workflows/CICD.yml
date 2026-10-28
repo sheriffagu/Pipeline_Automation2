@@ -6,8 +6,9 @@ on:
       - main
 
 permissions:
-  contents: read
-  security-events: write
+      contents: read
+      actions: read
+      security-events: write
 
 jobs:
   build:
