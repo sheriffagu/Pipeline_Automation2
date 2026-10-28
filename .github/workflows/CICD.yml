@@ -69,3 +69,27 @@ jobs:
           curl --fail --user "$NEXUS_USERNAME:$NEXUS_PASSWORD" \
             --upload-file MyWebApp/target/MyWebApp.war \
             "$NEXUS_URL/com/dept/app/MyWebApp/1.0-SNAPSHOT/MyWebApp-1.0-SNAPSHOT.war"
+
+      - name: Notify Slack on success
+        if: success()
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          payload: |
+            {
+              "text": "✅ Build succeeded for `${{ github.repository }}`"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: Notify Slack on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          payload: |
+            {
+              "text": "❌ Build failed for `${{ github.repository }}`"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
