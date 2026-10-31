@@ -86,7 +86,7 @@ jobs:
 
           curl --fail --user "$NEXUS_USERNAME:$NEXUS_PASSWORD" \
             --upload-file MyWebApp/target/MyWebApp.war \
-            "$NEXUS_URL/com/dept/app/MyWebApp/1.0-SNAPSHOT/MyWebApp-1.0-SNAPSHOT.war"
+            "$NEXUS_URL/com/dept/app/MyWebApp/1.0-SNAPSHOT/MyWebApp-${VERSION}.war"
 
       - name: Notify Slack on success
         if: success()
