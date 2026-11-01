@@ -1,0 +1,27 @@
+stages:
+  - build
+  - deploy
+build_war:
+  stage: build
+  image: maven:3.8.6-eclipse-tumerin-21
+  script:
+    -echo "building WAR file using maven"
+    -mvn clean install -f MyWebApp/pom.xml
+    -echo " listing tagget directory"
+    -ls -al myWebApp/target
+  artifacts:
+    paths:
+    - MyWebApp/target/*.war
+    expire_in: 1 hour
+deploying_to_tomcat:
+  stage: deploy
+  image: curlimages/curl:latest
+  dependencies:
+  - build_war
+  script:
+    - echo "Deploying WAR file to Tomcat running on AWS EC2"
+    - |
+      curl -v -u "${TOMCAT_USER}:${TOMCAT_PASSWORD}" \
+        -T MyWebApp/target/MyWebApp.war \
+        "${TOMCAT_URL}"
+          "http://${TOMCAT_HOST}/manager/text/deploy?path=/MyWebApp&update=true"
